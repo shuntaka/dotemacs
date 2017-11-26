@@ -1,0 +1,48 @@
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
+# Emacs #
+history
+auto-save-list
+.emacs.d/howm
+ac-comphist.dat
+.emacs.d/url
+.emacs.d/undohist
+.emacs.d/eshell
+.emacs.d/ex_init.el*
+.emacs.d/dis_init.el*
+
+# atom #
+# ignore packages
+.atom/packages/*
+
+# except keymap.cson, config.cson
+
+
+/.emacs.d/#init.el#
+/.emacs.d/tramp
+/.emacs.d/backup/
+/.emacs.d/scratch
+/.emacs.d/places
+/.emacs.d/flycheck_init.el
+/.emacs.d/elpa/archives/gnu/archive-contents
+/.emacs.d/elpa/archives/marmalade/archive-contents
+/.emacs.d/elpa/archives/melpa/archive-contents
+/.emacs.d/elpa/.DS_Store
+/.emacs.d/recentf
+/.emacs.d/bookmarks
+/.emacs.d/bookmarks
+
+# ignore el-get
+.emacs.d/el-get/*
+!.emacs.d/el-get/.status.el
+/.emacs.d/recentf~
+/.emacs.d/.mc-lists.el
