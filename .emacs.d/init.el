@@ -241,6 +241,17 @@
 (global-set-key (kbd "C-M-l") (lambda () (interactive) (move-to-window-line -1)))
 
 
+;;=============================================
+;; 6. Input Support
+;;=============================================
+;;----------------------------------------------
+;; hippie-exp-ext
+;;----------------------------------------------
+(require 'hippie-exp-ext)
+(KEYBOARD-translate ?\C-i ?\H-i) ;;C-i と Tabの被りを回避
+(global-set-key (kbd "H-i") 'hippie-expand-dabbrev-limited-chars)
+(global-set-key (kbd "M-/") 'hippie-expand-file-name)
+
 ;;===================================================================
 ;; 15. Helm & Anything
 ;;===================================================================
