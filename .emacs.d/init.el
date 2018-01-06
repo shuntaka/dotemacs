@@ -222,6 +222,16 @@
 ;; (require 'sequential-command-config)
 ;; (sequential-command-setup-keys)
 
+;;=============================================
+;; 5. Moving Cursor
+;;=============================================
+;;----------------------------------------------
+;; Vim H, M, L
+;;----------------------------------------------
+(global-set-key (kbd "C-M-h") (lambda () (interactive) (move-to-window-line 0)))
+(global-set-key (kbd "C-M-m") (lambda () (interactive) (move-to-window-line nil)))
+(global-set-key (kbd "C-M-l") (lambda () (interactive) (move-to-window-line -1)))
+
 
 ;;===================================================================
 ;; 15. Helm & Anything
