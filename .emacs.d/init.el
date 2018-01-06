@@ -245,12 +245,24 @@
 ;; 6. Input Support
 ;;=============================================
 ;;----------------------------------------------
+;; 6.2 redo+
+;;----------------------------------------------
+(require 'redo+)
+(global-set-key (kbd "C-M-/") 'redo)
+(setq undo-no-redo t) ; 過去のundoがredoされないようにする
+(setq undo-limit 600000)
+(setq undo-strong-limit 900000)
+
+
+;;----------------------------------------------
 ;; hippie-exp-ext
 ;;----------------------------------------------
 (require 'hippie-exp-ext)
 (KEYBOARD-translate ?\C-i ?\H-i) ;;C-i と Tabの被りを回避
 (global-set-key (kbd "H-i") 'hippie-expand-dabbrev-limited-chars)
 (global-set-key (kbd "M-/") 'hippie-expand-file-name)
+
+
 
 ;;===================================================================
 ;; 15. Helm & Anything
