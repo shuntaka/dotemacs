@@ -51,7 +51,7 @@
 ;; color-theme(zenburn)
 ;;----------------------------------------------
 ;; set color-theme here before any style settings
-;; since this would overwrite any style changes made before
+;; since this would overwrite any style changes made before this
 (use-package zenburn-theme
   :ensure t
   :config
@@ -60,6 +60,8 @@
 ;;----------------------------------------------
 ;;font
 ;;----------------------------------------------
+(add-to-list 'default-frame-alist
+	     '(font . "DejaVu Sans Mono-10"))
 (set-face-attribute 'default nil
                     :family "Ricty Diminished Discord"
 		    :height 240)
@@ -186,6 +188,8 @@
                     :underline "#ffff00" :weight 'extra-bold)
 
 
+(setq redisplay-dont-pause nil)
+
 ;;=============================================
 ;; 3. Key Binding
 ;;=============================================
@@ -239,3 +243,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(define-key global-map (kbd "C-x C-f") 'helm-find-files)
+(define-key global-map (kbd "C-x C-r") 'helm-recentf)
+(define-key global-map (kbd "M-y") 'helm-show-kill-ring)
