@@ -70,7 +70,7 @@
 ;; Monaco 12pt をデフォルトにする
 (set-face-attribute 'default nil
                     :family "Monaco"
-                    :height 150)
+                    :height 200)
 ;; 日本語をヒラギノ角ゴProNにする
 (set-fontset-font "fontset-default"
                   'japanese-jisx0208
