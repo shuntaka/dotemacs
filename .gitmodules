@@ -1,0 +1,6 @@
+[submodule "elscreen"]
+	path = elscreen
+	url = https://github.com/tam17aki/elscreen.git
+[submodule ".emacs.d/public_repos/elscreen"]
+	path = .emacs.d/public_repos/elscreen
+	url = https://github.com/tam17aki/elscreen.git

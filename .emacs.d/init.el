@@ -39,6 +39,23 @@
 ;; 2. Basic Settings
 ;;=================================================================
 ;;----------------------------------------------
+;; append the  directory and its subdirectoreis to the load-path
+;;----------------------------------------------
+;; define add-to-load-path
+(defun add-to-load-path (&rest paths)
+  (let (path)
+    (dolist (path paths paths)
+      (let ((default-directory
+              (expand-file-name (concat user-emacs-directory path))))
+        (add-to-list 'load-path default-directory)
+        (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+            (normal-top-level-add-subdirs-to-load-path))))))
+
+;; add directories under "elisp", "elpa", "conf", "public_repos"
+;;(add-to-load-path "el-get" "auto-install" "elisp" "elpa" "conf" "public_repos")
+(add-to-load-path "elpa" "public_repos")
+
+;;----------------------------------------------
 ;; elpa
 ;;----------------------------------------------
 (package-initialize)
@@ -371,3 +388,84 @@
 (define-key global-map (kbd "C-x C-f") 'helm-find-files)
 (define-key global-map (kbd "C-x C-r") 'helm-recentf)
 (define-key global-map (kbd "M-y") 'helm-show-kill-ring)
+
+;;=============================================
+;; Manipulating Frame and Window
+;;=============================================
+;;----------------------------------
+;; elscreen
+;;----------------------------------
+(require 'elscreen)
+
+;;; プレフィクスキーはC-z
+(setq elscreen-prefix-key (kbd "C-'"))
+(elscreen-start)
+;;; タブの先頭に[X]を表示しない
+(setq elscreen-tab-display-kill-screen nil)
+;;; header-lineの先頭に[<->]を表示しない
+(setq elscreen-tab-display-control nil)
+;;; バッファ名・モード名からタブに表示させる内容を決定する(デフォルト設定)
+(setq elscreen-buffer-to-nickname-alist
+      '(("^dired-mode$" .
+         (lambda ()
+           (format "Dired(%s)" dired-directory)))
+        ("^Info-mode$" .
+         (lambda ()
+           (format "Info(%s)" (file-name-nondirectory Info-current-file))))
+        ("^mew-draft-mode$" .
+         (lambda ()
+           (format "Mew(%s)" (buffer-name (current-buffer)))))
+        ("^mew-" . "Mew")
+        ("^irchat-" . "IRChat")
+        ("^liece-" . "Liece")
+        ("^lookup-" . "Lookup")))
+(setq elscreen-mode-to-nickname-alist
+      '(("[Ss]hell" . "shell")
+        ("compilation" . "compile")
+        ("-telnet" . "telnet")
+        ("dict" . "OnlineDict")
+        ("*WL:Message*" . "Wanderlust")))
+
+;; タブ移動を簡単に
+;; (define-key global-map (kbd "M-t") 'elscreen-next)
+
+;;----------------------------------------------
+;; elscreen keybind
+;;http://qiita.com/saku/items/6ef40a0bbaadb2cffbce
+;;http://blog.iss.ms/2010/02/25/121855
+;;http://d.hatena.ne.jp/kobapan/20090429/1259971276
+;;http://sleepboy-zzz.blogspot.co.uk/2012/11/emacs.html
+;;----------------------------------------------
+(define-key global-map (kbd "M-t") 'elscreen-create)
+(define-key global-map (kbd "M-T") 'elscreen-clone)
+(define-key global-map (kbd "<C-tab>") 'elscreen-next)
+(define-key global-map (kbd "<C-S-tab>")'elscreen-previous)
+(global-set-key (kbd "C-M-t") 'elscreen-kill)
+;;----------------------------------------------
+;; helm-elscreen kenbind
+;;----------------------------------------------
+(define-key global-map (kbd "C-'") 'helm-elscreen)
+
+;;----------------------------------------------
+;; elscreen resume the last buffer on kill buffer
+;; http://qiita.com/fujimisakari/items/d7f1b904de11dcb018c3
+;;----------------------------------------------
+;; 直近バッファ選定時の無視リスト
+(defvar elscreen-ignore-buffer-list
+  '("*scratch*" "*Backtrace*" "*Colors*" "*Faces*" "*Compile-Log*" "*Packages*" "*vc-" "*Minibuf-" "*Messages" "*WL:Message"))
+;; elscreen用バッファ削除
+(defun kill-buffer-for-elscreen ()
+  (interactive)
+  (kill-buffer)
+  (let* ((next-buffer nil)
+         (re (regexp-opt elscreen-ignore-buffer-list))
+         (next-buffer-list (mapcar (lambda (buf)
+                                     (let ((name (buffer-name buf)))
+                                       (when (not (string-match re name))
+                                         name)))
+                                   (buffer-list))))
+    (dolist (buf next-buffer-list)
+      (if (equal next-buffer nil)
+          (setq next-buffer buf)))
+    (switch-to-buffer next-buffer)))
+(global-set-key (kbd "C-x k") 'kill-buffer-for-elscreen)             ; カレントバッファを閉じる
