@@ -362,6 +362,23 @@
 (global-set-key (kbd "H-i") 'hippie-expand-dabbrev-limited-chars)
 (global-set-key (kbd "M-/") 'hippie-expand-file-name)
 
+;;=============================================
+;; 14. Create Documents
+;;=============================================
+(require 'org)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-default indent-tabs-mode nil)))
+;;----------------------------------------------
+;; org-mode keybind
+;;----------------------------------------------
+(define-key org-mode-map (kbd "<C-tab>") 'elscreen-next)
+(define-key org-mode-map (kbd "<C-S-tab>")'elscreen-previous)
+(define-key org-mode-map (kbd "C-'")'helm-elscreen)
+(define-key org-mode-map (kbd "C-M-t") 'elscreen-kill)
+;; (define-key org-mode-map (kbd "C-M-i") 'company-complete)
+(define-key org-mode-map (kbd "C-M-i") 'helm-dabbrev)
+(define-key org-mode-map (kbd "C-M-m") (lambda () (interactive) (move-to-window-line nil)))
 
 
 ;;===================================================================
@@ -440,7 +457,7 @@
 (define-key global-map (kbd "M-T") 'elscreen-clone)
 (define-key global-map (kbd "<C-tab>") 'elscreen-next)
 (define-key global-map (kbd "<C-S-tab>")'elscreen-previous)
-(global-set-key (kbd "C-M-t") 'elscreen-kill)
+(define-key global-map (kbd "C-M-t") 'elscreen-kill)
 ;;----------------------------------------------
 ;; helm-elscreen kenbind
 ;;----------------------------------------------
