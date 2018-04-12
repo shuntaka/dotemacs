@@ -34,6 +34,7 @@ ac-comphist.dat
 /.emacs.d/places
 /.emacs.d/flycheck_init.el
 /.emacs.d/elpa/archives/gnu/archive-contents
+/.emacs.d/elpa/archives/org/archive-contents
 /.emacs.d/elpa/archives/marmalade/archive-contents
 /.emacs.d/elpa/archives/melpa/archive-contents
 /.emacs.d/elpa/.DS_Store
