@@ -362,6 +362,16 @@
 (global-set-key (kbd "H-i") 'hippie-expand-dabbrev-limited-chars)
 (global-set-key (kbd "M-/") 'hippie-expand-file-name)
 
+;;----------------------------------------------
+;; kill-line and delete indent
+;;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part16
+;;----------------------------------------------
+(defadvice kill-line (before kill-line-and-fixup activate)
+  (when (and (not (bolp)) (eolp))
+    (forward-char)
+    (fixup-whitespace)
+    (backward-char)))
+
 ;;=============================================
 ;; 14. Create Documents
 ;;=============================================
