@@ -390,6 +390,23 @@
 (define-key org-mode-map (kbd "C-M-i") 'helm-dabbrev)
 (define-key org-mode-map (kbd "C-M-m") (lambda () (interactive) (move-to-window-line nil)))
 
+;;----------------------
+;; 14.2
+;;----------------------
+(require 'org)
+(defun org-insert-upheading (arg)
+  (interactive "P")
+  (org-insert-heading arg)
+  (cond ((org-on-heading-p) (org-do-promote))
+        ((org-at-item-p) (org-indent-item -1 ))))
+(defun org-insert-heading-dwim (arg)
+  (interactive "p")
+  (case arg
+    (4  (org-insert-subheading nil))
+    (16 (org-insert-upheading nil))
+    (t  (org-insert-heading nil))))
+(define-key org-mode-map (kbd "<C-return>") 'org-insert-heading-dwim)
+
 
 ;;===================================================================
 ;; 15. Helm & Anything
