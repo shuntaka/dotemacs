@@ -258,6 +258,17 @@
 (defun line-to-top-of-window () (interactive) (recenter 0))
 (global-set-key (kbd "C-z") 'line-to-top-of-window)
 
+;;=============================================
+;; 4. Manipulating Buffers and Files
+;;=============================================
+;;----------------------------------------------
+;; wdired.el
+;; http://emacs.rubikitch.com/sd1411-dired-wdired/
+;;----------------------------------------------
+(require 'wdired)
+(setq wdired-allow-to-change-permissions t)
+(define-key dired-mode-map "e" 'wdired-change-to-wdired-mode)
+
 
 ;;=============================================
 ;; 5. Moving Cursor
