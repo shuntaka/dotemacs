@@ -343,6 +343,7 @@
     (fixup-whitespace)
     (backward-char)))
 
+
 ;;=============================================
 ;; 14. Create Documents
 ;;=============================================
@@ -403,6 +404,20 @@
 (define-key global-map (kbd "C-x C-f") 'helm-find-files)
 (define-key global-map (kbd "C-x C-r") 'helm-recentf)
 (define-key global-map (kbd "M-y") 'helm-show-kill-ring)
+
+;;----------------------------------------------
+;; helm-swoop
+;; https://github.com/ShingoFukuyama/helm-swoop
+;;----------------------------------------------
+(require 'helm-swoop)
+;; disable pre-input
+(setq helm-swoop-pre-input-function
+      (lambda () ""))
+(global-set-key (kbd "C-s") 'helm-swoop)
+;;; isearchからの連携を考えるとC-r/C-sにも割り当て推奨
+(define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
+(define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
+
 
 ;;=============================================
 ;; Manipulating Frame and Window
