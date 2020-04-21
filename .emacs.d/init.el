@@ -110,6 +110,10 @@
 ;;; 対応する括弧を光らせる
 (show-paren-mode t)
 
+;;; 括弧自動補完
+(electric-pair-mode 1)
+
+
 ;;; シェルに合わせるため、C-hは後退に割り当てる
 ;;; ヘルプは<f1>
 (global-set-key (kbd "C-h") 'delete-backward-char)
