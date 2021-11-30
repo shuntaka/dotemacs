@@ -39,6 +39,23 @@
 ;; 2. Basic Settings
 ;;=================================================================
 ;;----------------------------------------------
+;; append the  directory and its subdirectoreis to the load-path
+;;----------------------------------------------
+;; define add-to-load-path
+(defun add-to-load-path (&rest paths)
+  (let (path)
+    (dolist (path paths paths)
+      (let ((default-directory
+              (expand-file-name (concat user-emacs-directory path))))
+        (add-to-list 'load-path default-directory)
+        (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
+            (normal-top-level-add-subdirs-to-load-path))))))
+
+;; add directories under "elisp", "elpa", "conf", "public_repos"
+;;(add-to-load-path "el-get" "auto-install" "elisp" "elpa" "conf" "public_repos")
+(add-to-load-path "elpa" "public_repos")
+
+;;----------------------------------------------
 ;; elpa
 ;;----------------------------------------------
 (package-initialize)
@@ -51,7 +68,7 @@
 ;; color-theme(zenburn)
 ;;----------------------------------------------
 ;; set color-theme here before any style settings
-;; since this would overwrite any style changes made before
+;; since this would overwrite any style changes made before this
 (use-package zenburn-theme
   :ensure t
   :config
@@ -59,11 +76,26 @@
 
 ;;----------------------------------------------
 ;;font
+;; https://gist.github.com/mitukiii/4365568
 ;;----------------------------------------------
-(set-face-attribute 'default nil
-                    :family "Ricty Diminished Discord"
-		    :height 240)
+;; (add-to-list 'default-frame-alist
+;; 	     '(font . "DejaVu Sans Mono-10"))
+;; (set-face-attribute 'default nil
+;;                     :family "Ricty Diminished Discord"
+;; 		    :height 240)
 
+;; Monaco 12pt をデフォルトにする
+(set-face-attribute 'default nil
+                    :family "Monaco"
+                    :height 200)
+;; 日本語をヒラギノ角ゴProNにする
+(set-fontset-font "fontset-default"
+                  'japanese-jisx0208
+                  '("Hiragino Maru Gothic ProN"))
+;; 半角カナをヒラギノ角ゴProNにする
+(set-fontset-font "fontset-default"
+                  'katakana-jisx0201
+                  '("Hiragino Maru Gothic ProN"))
 
 ;;----------------------------------------------
 ;; from Emacs Technique Bible Basic Setting
@@ -77,6 +109,10 @@
 
 ;;; 対応する括弧を光らせる
 (show-paren-mode t)
+
+;;; auto paren 括弧自動補完 
+;; (electric-pair-mode 1)
+
 
 ;;; シェルに合わせるため、C-hは後退に割り当てる
 ;;; ヘルプは<f1>
@@ -151,17 +187,24 @@
       (run-with-idle-timer 0.03 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
 
+;;----------------------------------------------
+;; show-paren-match
+;; https://typeinf-memo.blogspot.com/2016/06/emacsshow-paren-match-faceremoved.html
+;;----------------------------------------------
+(set-face-attribute 'show-paren-match nil
+      :background 'unspecified
+      :underline "turquoise")
 
 ;;----------------------------------------------
 ;; highlight between two parens
 ;; http://syohex.hatenablog.com/entry/20110331/1301584188
 ;;----------------------------------------------
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-(setq show-paren-style 'expression)
-(set-face-attribute 'show-paren-match-face nil
-                    :background nil :foreground nil
-                    :underline "#ffff00" :weight 'extra-bold)
+;; (show-paren-mode 1)
+;; (setq show-paren-delay 0)
+;; (setq show-paren-style 'expression)
+;; (set-face-attribute 'show-paren-match-face nil
+;;                     :background nil :foreground nil
+;;                     :underline "#ffff00" :weight 'extra-bold)
 
 ;;----------------------------------------------
 ;; ターミナル以外はツーバーとスクロールバーを消す
@@ -181,10 +224,12 @@
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
-(set-face-attribute 'show-paren-match-face nil
-                    :background nil :foreground nil
-                    :underline "#ffff00" :weight 'extra-bold)
+;; (set-face-attribute 'show-paren-match-face nil
+;;                     :background nil :foreground nil
+;;                     :underline "#ffff00" :weight 'extra-bold)
 
+
+(setq redisplay-dont-pause nil)
 
 ;;=============================================
 ;; 3. Key Binding
@@ -218,6 +263,174 @@
 ;; (require 'sequential-command-config)
 ;; (sequential-command-setup-keys)
 
+;;----------------------------------------------
+;; 3.6 define-key
+;;----------------------------------------------
+(defun line-to-top-of-window () (interactive) (recenter 0))
+(global-set-key (kbd "C-z") 'line-to-top-of-window)
+
+;;=============================================
+;; 4. Manipulating Buffers and Files
+;;=============================================
+;;----------------------------------------------
+;; wdired.el
+;; http://emacs.rubikitch.com/sd1411-dired-wdired/
+;;----------------------------------------------
+(require 'wdired)
+(setq wdired-allow-to-change-permissions t)
+(define-key dired-mode-map "e" 'wdired-change-to-wdired-mode)
+
+
+;;=============================================
+;; 5. Moving Cursor
+;;=============================================
+;;----------------------------------------------
+;; point-undo
+;;----------------------------------------------
+(require 'point-undo)
+(define-key global-map (kbd "M-p") 'point-undo)
+(define-key global-map (kbd "M-n") 'point-redo)
+
+
+;;----------------------------------------------
+;; goto-chg.el
+;;----------------------------------------------
+(require 'goto-chg)
+(global-set-key (kbd "M-i") 'goto-last-change)
+(global-set-key (kbd "M-j") 'goto-last-change-reverse)
+
+;;----------------------------------------------
+;; Vim H, M, L
+;;----------------------------------------------
+
+(global-set-key (kbd "C-M-h") (lambda () (interactive) (move-to-window-line 0)))
+(global-set-key (kbd "C-M-m") (lambda () (interactive) (move-to-window-line nil)))
+(global-set-key (kbd "C-M-l") (lambda () (interactive) (move-to-window-line -1)))
+
+;;----------------------------------------------
+;; ace-jump-mode
+;;http://rubikitch.com/2014/10/09/ace-jump-mode/
+;;----------------------------------------------
+;; ヒント文字に使う文字を指定する
+(require 'ace-jump-mode)
+(setq ace-jump-mode-move-keys
+      (append "asdfghjkl;:]qwertyuiop@zxcvbnm,." nil))
+;; ace-jump-word-modeのとき文字を尋ねないようにする
+(setq ace-jump-word-mode-use-query-char nil)
+(global-set-key (kbd "C-o") 'ace-jump-char-mode)
+;; (global-set-key (kbd "C-;") 'ace-jump-word-mode)
+(global-set-key (kbd "C-M-;") 'ace-jump-line-mode)
+
+
+
+;;=============================================
+;; 6. Input Support
+;;=============================================
+;;----------------------------------------------
+;; 6.2 redo+
+;;----------------------------------------------
+(require 'redo+)
+(global-set-key (kbd "C-M-/") 'redo)
+(setq undo-no-redo t) ; 過去のundoがredoされないようにする
+(setq undo-limit 600000)
+(setq undo-strong-limit 900000)
+
+
+;;----------------------------------------------
+;; hippie-exp-ext
+;;----------------------------------------------
+(require 'hippie-exp-ext)
+(keyboard-translate ?\C-i ?\H-i) ;;C-i と Tabの被りを回避
+(global-set-key (kbd "H-i") 'hippie-expand-dabbrev-limited-chars)
+(global-set-key (kbd "M-/") 'hippie-expand-file-name)
+
+;;----------------------------------------------
+;; kill-line and delete indent
+;;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part16
+;;----------------------------------------------
+(defadvice kill-line (before kill-line-and-fixup activate)
+  (when (and (not (bolp)) (eolp))
+    (forward-char)
+    (fixup-whitespace)
+    (backward-char)))
+
+
+;;=============================================
+;; 14. Create Documents
+;;=============================================
+(require 'org)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-default indent-tabs-mode nil)))
+;;----------------------------------------------
+;; org-mode keybind
+;;----------------------------------------------
+(define-key org-mode-map (kbd "<C-tab>") 'elscreen-next)
+(define-key org-mode-map (kbd "<C-S-tab>")'elscreen-previous)
+(define-key org-mode-map (kbd "C-'")'helm-elscreen)
+(define-key org-mode-map (kbd "C-M-t") 'elscreen-kill)
+;; (define-key org-mode-map (kbd "C-M-i") 'company-complete)
+(define-key org-mode-map (kbd "C-M-i") 'helm-dabbrev)
+(define-key org-mode-map (kbd "C-M-m") (lambda () (interactive) (move-to-window-line nil)))
+
+;;----------------------
+;; 14.2
+;;----------------------
+(require 'org)
+(defun org-insert-upheading (arg)
+  (interactive "P")
+  (org-insert-heading arg)
+  (cond ((org-on-heading-p) (org-do-promote))
+        ((org-at-item-p) (org-indent-item -1 ))))
+(defun org-insert-heading-dwim (arg)
+  (interactive "p")
+  (case arg
+    (4  (org-insert-subheading nil))
+    (16 (org-insert-upheading nil))
+    (t  (org-insert-heading nil))))
+(define-key org-mode-map (kbd "<C-return>") 'org-insert-heading-dwim)
+
+
+;;----------------------------------------------
+;; insert code block
+;; http://wenshanren.org/?p=334
+;;----------------------------------------------
+;; func to insert
+(defun org-insert-src-block (src-code-type)
+  "Insert a `SRC-CODE-TYPE' type source code block in org-mode."
+  (interactive
+   (let ((src-code-types
+          '("emacs-lisp" "python" "C" "sh" "java" "js" "clojure" "C++" "css"
+            "calc" "asymptote" "dot" "gnuplot" "ledger" "lilypond" "mscgen"
+            "octave" "oz" "plantuml" "R" "sass" "screen" "sql" "awk" "ditaa"
+            "haskell" "latex" "lisp" "matlab" "ocaml" "org" "perl" "ruby"
+            "scheme" "sqlite")))
+     (list (ido-completing-read "Source code type: " src-code-types))))
+  (progn
+    (newline-and-indent)
+    (insert (format "#+BEGIN_SRC %s\n" src-code-type))
+    (newline-and-indent)
+    (insert "#+END_SRC\n")
+    (previous-line 2)
+    (org-edit-src-code)))
+
+;; keybind
+(add-hook 'org-mode-hook '(lambda ()
+                            ;; turn on flyspell-mode by default
+                            (flyspell-mode 1)
+                            ;; C-TAB for expanding
+                            ;; (local-set-key (kbd "C-<tab>")
+                            ;;                'yas/expand-from-trigger-key)
+                            ;; keybinding for editing source code blocks
+                            (local-set-key (kbd "C-c s e")
+                                           'org-edit-src-code)
+                            ;; keybinding for inserting code blocks
+                            (local-set-key (kbd "C-c s i")
+                                           'org-insert-src-block)
+                            ))
+
+;; syntax highlight
+(setq org-src-fontify-natively t)
 
 ;;===================================================================
 ;; 15. Helm & Anything
@@ -232,10 +445,109 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (use-package helm))))
+ '(package-selected-packages '(neotree helm-swoop zenburn-theme use-package helm)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(define-key global-map (kbd "C-x C-f") 'helm-find-files)
+(define-key global-map (kbd "C-x C-r") 'helm-recentf)
+(define-key global-map (kbd "M-y") 'helm-show-kill-ring)
+
+;;----------------------------------------------
+;; helm-swoop
+;; https://github.com/ShingoFukuyama/helm-swoop
+;;----------------------------------------------
+(require 'helm-swoop)
+;; disable pre-input
+(setq helm-swoop-pre-input-function
+      (lambda () ""))
+(global-set-key (kbd "C-s") 'helm-swoop)
+;;; isearchからの連携を考えるとC-r/C-sにも割り当て推奨
+(define-key helm-swoop-map (kbd "C-r") 'helm-previous-line)
+(define-key helm-swoop-map (kbd "C-s") 'helm-next-line)
+
+
+;;=============================================
+;; Manipulating Frame and Window
+;;=============================================
+;;----------------------------------
+;; elscreen
+;;----------------------------------
+(require 'elscreen)
+
+;;; プレフィクスキーはC-z
+(setq elscreen-prefix-key (kbd "C-'"))
+(elscreen-start)
+;;; タブの先頭に[X]を表示しない
+(setq elscreen-tab-display-kill-screen nil)
+;;; header-lineの先頭に[<->]を表示しない
+(setq elscreen-tab-display-control nil)
+;;; バッファ名・モード名からタブに表示させる内容を決定する(デフォルト設定)
+(setq elscreen-buffer-to-nickname-alist
+      '(("^dired-mode$" .
+         (lambda ()
+           (format "Dired(%s)" dired-directory)))
+        ("^Info-mode$" .
+         (lambda ()
+           (format "Info(%s)" (file-name-nondirectory Info-current-file))))
+        ("^mew-draft-mode$" .
+         (lambda ()
+           (format "Mew(%s)" (buffer-name (current-buffer)))))
+        ("^mew-" . "Mew")
+        ("^irchat-" . "IRChat")
+        ("^liece-" . "Liece")
+        ("^lookup-" . "Lookup")))
+(setq elscreen-mode-to-nickname-alist
+      '(("[Ss]hell" . "shell")
+        ("compilation" . "compile")
+        ("-telnet" . "telnet")
+        ("dict" . "OnlineDict")
+        ("*WL:Message*" . "Wanderlust")))
+
+;; タブ移動を簡単に
+;; (define-key global-map (kbd "M-t") 'elscreen-next)
+
+;;----------------------------------------------
+;; elscreen keybind
+;;http://qiita.com/saku/items/6ef40a0bbaadb2cffbce
+;;http://blog.iss.ms/2010/02/25/121855
+;;http://d.hatena.ne.jp/kobapan/20090429/1259971276
+;;http://sleepboy-zzz.blogspot.co.uk/2012/11/emacs.html
+;;----------------------------------------------
+(define-key global-map (kbd "M-t") 'elscreen-create)
+(define-key global-map (kbd "M-T") 'elscreen-clone)
+(define-key global-map (kbd "<C-tab>") 'elscreen-next)
+(define-key global-map (kbd "<C-S-tab>")'elscreen-previous)
+(define-key global-map (kbd "C-M-t") 'elscreen-kill)
+;;----------------------------------------------
+;; helm-elscreen kenbind
+;;----------------------------------------------
+(define-key global-map (kbd "C-'") 'helm-elscreen)
+
+;;----------------------------------------------
+;; elscreen resume the last buffer on kill buffer
+;; http://qiita.com/fujimisakari/items/d7f1b904de11dcb018c3
+;;----------------------------------------------
+;; 直近バッファ選定時の無視リスト
+(defvar elscreen-ignore-buffer-list
+  '("*scratch*" "*Backtrace*" "*Colors*" "*Faces*" "*Compile-Log*" "*Packages*" "*vc-" "*Minibuf-" "*Messages" "*WL:Message"))
+;; elscreen用バッファ削除
+(defun kill-buffer-for-elscreen ()
+  (interactive)
+  (kill-buffer)
+  (let* ((next-buffer nil)
+         (re (regexp-opt elscreen-ignore-buffer-list))
+         (next-buffer-list (mapcar (lambda (buf)
+                                     (let ((name (buffer-name buf)))
+                                       (when (not (string-match re name))
+                                         name)))
+                                   (buffer-list))))
+    (dolist (buf next-buffer-list)
+      (if (equal next-buffer nil)
+          (setq next-buffer buf)))
+    (switch-to-buffer next-buffer)))
+(global-set-key (kbd "C-x k") 'kill-buffer-for-elscreen)             ; カレントバッファを閉じる

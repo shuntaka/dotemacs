@@ -365,10 +365,10 @@
 ;;----------------------------------------------
 ;; org-mode keybind
 ;;----------------------------------------------
-(define-key org-mode-map (kbd "<C-tab>") 'elscreen-next)
-(define-key org-mode-map (kbd "<C-S-tab>")'elscreen-previous)
-(define-key org-mode-map (kbd "C-'")'helm-elscreen)
-(define-key org-mode-map (kbd "C-M-t") 'elscreen-kill)
+;; (define-key org-mode-map (kbd "<C-tab>") 'elscreen-next)
+;; (define-key org-mode-map (kbd "<C-S-tab>")'elscreen-previous)
+;; (define-key org-mode-map (kbd "C-'")'helm-elscreen)
+;; (define-key org-mode-map (kbd "C-M-t") 'elscreen-kill)
 ;; (define-key org-mode-map (kbd "C-M-i") 'company-complete)
 (define-key org-mode-map (kbd "C-M-i") 'helm-dabbrev)
 (define-key org-mode-map (kbd "C-M-m") (lambda () (interactive) (move-to-window-line nil)))
@@ -445,7 +445,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages (quote (helm-swoop zenburn-theme use-package helm))))
+ '(package-selected-packages '(neotree helm-swoop zenburn-theme use-package helm)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -475,38 +475,45 @@
 ;; Manipulating Frame and Window
 ;;=============================================
 ;;----------------------------------
+;; neotree
+;; https://github.com/jaypei/emacs-neotree
+;;----------------------------------
+(require 'neotree)
+(global-set-key [f8] 'neotree-toggle)
+
+;;----------------------------------
 ;; elscreen
 ;;----------------------------------
 (require 'elscreen)
 
-;;; プレフィクスキーはC-z
-(setq elscreen-prefix-key (kbd "C-'"))
-(elscreen-start)
-;;; タブの先頭に[X]を表示しない
-(setq elscreen-tab-display-kill-screen nil)
-;;; header-lineの先頭に[<->]を表示しない
-(setq elscreen-tab-display-control nil)
-;;; バッファ名・モード名からタブに表示させる内容を決定する(デフォルト設定)
-(setq elscreen-buffer-to-nickname-alist
-      '(("^dired-mode$" .
-         (lambda ()
-           (format "Dired(%s)" dired-directory)))
-        ("^Info-mode$" .
-         (lambda ()
-           (format "Info(%s)" (file-name-nondirectory Info-current-file))))
-        ("^mew-draft-mode$" .
-         (lambda ()
-           (format "Mew(%s)" (buffer-name (current-buffer)))))
-        ("^mew-" . "Mew")
-        ("^irchat-" . "IRChat")
-        ("^liece-" . "Liece")
-        ("^lookup-" . "Lookup")))
-(setq elscreen-mode-to-nickname-alist
-      '(("[Ss]hell" . "shell")
-        ("compilation" . "compile")
-        ("-telnet" . "telnet")
-        ("dict" . "OnlineDict")
-        ("*WL:Message*" . "Wanderlust")))
+;; ;;; プレフィクスキーはC-z
+;; (setq elscreen-prefix-key (kbd "C-'"))
+;; (elscreen-start)
+;; ;;; タブの先頭に[X]を表示しない
+;; (setq elscreen-tab-display-kill-screen nil)
+;; ;;; header-lineの先頭に[<->]を表示しない
+;; (setq elscreen-tab-display-control nil)
+;; ;;; バッファ名・モード名からタブに表示させる内容を決定する(デフォルト設定)
+;; (setq elscreen-buffer-to-nickname-alist
+;;       '(("^dired-mode$" .
+;;          (lambda ()
+;;            (format "Dired(%s)" dired-directory)))
+;;         ("^Info-mode$" .
+;;          (lambda ()
+;;            (format "Info(%s)" (file-name-nondirectory Info-current-file))))
+;;         ("^mew-draft-mode$" .
+;;          (lambda ()
+;;            (format "Mew(%s)" (buffer-name (current-buffer)))))
+;;         ("^mew-" . "Mew")
+;;         ("^irchat-" . "IRChat")
+;;         ("^liece-" . "Liece")
+;;         ("^lookup-" . "Lookup")))
+;; (setq elscreen-mode-to-nickname-alist
+;;       '(("[Ss]hell" . "shell")
+;;         ("compilation" . "compile")
+;;         ("-telnet" . "telnet")
+;;         ("dict" . "OnlineDict")
+;;         ("*WL:Message*" . "Wanderlust")))
 
 ;; タブ移動を簡単に
 ;; (define-key global-map (kbd "M-t") 'elscreen-next)
@@ -518,36 +525,36 @@
 ;;http://d.hatena.ne.jp/kobapan/20090429/1259971276
 ;;http://sleepboy-zzz.blogspot.co.uk/2012/11/emacs.html
 ;;----------------------------------------------
-(define-key global-map (kbd "M-t") 'elscreen-create)
-(define-key global-map (kbd "M-T") 'elscreen-clone)
-(define-key global-map (kbd "<C-tab>") 'elscreen-next)
-(define-key global-map (kbd "<C-S-tab>")'elscreen-previous)
-(define-key global-map (kbd "C-M-t") 'elscreen-kill)
+;; (define-key global-map (kbd "M-t") 'elscreen-create)
+;; (define-key global-map (kbd "M-T") 'elscreen-clone)
+;; (define-key global-map (kbd "<C-tab>") 'elscreen-next)
+;; (define-key global-map (kbd "<C-S-tab>")'elscreen-previous)
+;; (define-key global-map (kbd "C-M-t") 'elscreen-kill)
 ;;----------------------------------------------
 ;; helm-elscreen kenbind
 ;;----------------------------------------------
-(define-key global-map (kbd "C-'") 'helm-elscreen)
+;; (define-key global-map (kbd "C-'") 'helm-elscreen)
 
 ;;----------------------------------------------
 ;; elscreen resume the last buffer on kill buffer
 ;; http://qiita.com/fujimisakari/items/d7f1b904de11dcb018c3
 ;;----------------------------------------------
-;; 直近バッファ選定時の無視リスト
-(defvar elscreen-ignore-buffer-list
-  '("*scratch*" "*Backtrace*" "*Colors*" "*Faces*" "*Compile-Log*" "*Packages*" "*vc-" "*Minibuf-" "*Messages" "*WL:Message"))
-;; elscreen用バッファ削除
-(defun kill-buffer-for-elscreen ()
-  (interactive)
-  (kill-buffer)
-  (let* ((next-buffer nil)
-         (re (regexp-opt elscreen-ignore-buffer-list))
-         (next-buffer-list (mapcar (lambda (buf)
-                                     (let ((name (buffer-name buf)))
-                                       (when (not (string-match re name))
-                                         name)))
-                                   (buffer-list))))
-    (dolist (buf next-buffer-list)
-      (if (equal next-buffer nil)
-          (setq next-buffer buf)))
-    (switch-to-buffer next-buffer)))
-(global-set-key (kbd "C-x k") 'kill-buffer-for-elscreen)             ; カレントバッファを閉じる
+;; ;; 直近バッファ選定時の無視リスト
+;; (defvar elscreen-ignore-buffer-list
+;;   '("*scratch*" "*Backtrace*" "*Colors*" "*Faces*" "*Compile-Log*" "*Packages*" "*vc-" "*Minibuf-" "*Messages" "*WL:Message"))
+;; ;; elscreen用バッファ削除
+;; (defun kill-buffer-for-elscreen ()
+;;   (interactive)
+;;   (kill-buffer)
+;;   (let* ((next-buffer nil)
+;;          (re (regexp-opt elscreen-ignore-buffer-list))
+;;          (next-buffer-list (mapcar (lambda (buf)
+;;                                      (let ((name (buffer-name buf)))
+;;                                        (when (not (string-match re name))
+;;                                          name)))
+;;                                    (buffer-list))))
+;;     (dolist (buf next-buffer-list)
+;;       (if (equal next-buffer nil)
+;;           (setq next-buffer buf)))
+;;     (switch-to-buffer next-buffer)))
+;; (global-set-key (kbd "C-x k") 'kill-buffer-for-elscreen)             ; カレントバッファを閉じる
