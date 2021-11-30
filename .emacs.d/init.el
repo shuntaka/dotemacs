@@ -187,17 +187,24 @@
       (run-with-idle-timer 0.03 t 'global-hl-line-timer-function))
 ;; (cancel-timer global-hl-line-timer)
 
+;;----------------------------------------------
+;; show-paren-match
+;; https://typeinf-memo.blogspot.com/2016/06/emacsshow-paren-match-faceremoved.html
+;;----------------------------------------------
+(set-face-attribute 'show-paren-match nil
+      :background 'unspecified
+      :underline "turquoise")
 
 ;;----------------------------------------------
 ;; highlight between two parens
 ;; http://syohex.hatenablog.com/entry/20110331/1301584188
 ;;----------------------------------------------
-(show-paren-mode 1)
-(setq show-paren-delay 0)
-(setq show-paren-style 'expression)
-(set-face-attribute 'show-paren-match-face nil
-                    :background nil :foreground nil
-                    :underline "#ffff00" :weight 'extra-bold)
+;; (show-paren-mode 1)
+;; (setq show-paren-delay 0)
+;; (setq show-paren-style 'expression)
+;; (set-face-attribute 'show-paren-match-face nil
+;;                     :background nil :foreground nil
+;;                     :underline "#ffff00" :weight 'extra-bold)
 
 ;;----------------------------------------------
 ;; ターミナル以外はツーバーとスクロールバーを消す
@@ -217,9 +224,9 @@
 (show-paren-mode 1)
 (setq show-paren-delay 0)
 (setq show-paren-style 'expression)
-(set-face-attribute 'show-paren-match-face nil
-                    :background nil :foreground nil
-                    :underline "#ffff00" :weight 'extra-bold)
+;; (set-face-attribute 'show-paren-match-face nil
+;;                     :background nil :foreground nil
+;;                     :underline "#ffff00" :weight 'extra-bold)
 
 
 (setq redisplay-dont-pause nil)
