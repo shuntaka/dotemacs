@@ -390,6 +390,16 @@
     (t  (org-insert-heading nil))))
 (define-key org-mode-map (kbd "<C-return>") 'org-insert-heading-dwim)
 
+;;----------------------
+;; 14.6
+;;----------------------
+(require 'org)
+(setq org-use-fast-todo-selection t)
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "WAIT(w)" "WIP(p)" "|" "DONE(x)")
+        ;; '((sequence "TODO(t)" "WAITING(w)" "PROJECT(p)" "SUBPROJECT(s)" "|" "DONE(x)" "CANCEL(c)")
+        (sequence "APPT(a)" "|" "DONE(x)" "CANCEL(c)")))
+
 
 ;;----------------------------------------------
 ;; insert code block
