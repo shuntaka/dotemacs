@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: tempo-todo
+# key: tempo
+# --
+*** $1/$2($3) [/]
+    - [ ] $0

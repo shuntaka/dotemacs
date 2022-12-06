@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: team-meeting
+# key: team
+# --
+- [ ] 日時決定 (e.g. 4/1月 13:00)
+        $0
+      - [ ] スケジューラ登録
+      - [ ] temas登録
+      - [ ] googleカレンダー登録
+      - [ ] teams連絡
+      - [ ] teams確認

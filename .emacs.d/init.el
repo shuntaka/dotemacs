@@ -335,6 +335,19 @@
 (setq undo-limit 600000)
 (setq undo-strong-limit 900000)
 
+;;----------------------------------------------
+;; 6.7 yasnippet.el
+;; http://emacs.rubikitch.com/sd1512-dabbrev-hippie-skeleton-yasnippet/
+;; http://emacs.rubikitch.com/sd1601-auto-yasnippet-2/
+;; http://vdeep.net/emacs-yasnippet
+
+;;----------------------------------------------
+(yas-global-mode 1)
+;;; スニペット名をidoで選択する
+(setq yas-prompt-functions '(yas-ido-prompt))
+;; ("~/.emacs.d/snippets" yas-installed-snippets-dir)
+
+
 
 ;;----------------------------------------------
 ;; hippie-exp-ext
@@ -362,6 +375,13 @@
 (add-hook 'org-mode-hook
           (lambda ()
             (setq-default indent-tabs-mode nil)))
+
+;;----------------------------------------------
+;; pomodoro
+;; https://www.youtube.com/watch?v=JbHE819kVGQ
+;;----------------------------------------------
+(setq org-clock-sound "./sounds/bell.mp3")
+
 ;;----------------------------------------------
 ;; org-mode keybind
 ;;----------------------------------------------
@@ -396,7 +416,7 @@
 (require 'org)
 (setq org-use-fast-todo-selection t)
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "WAIT(w)" "WIP(p)" "|" "DONE(x)")
+      '((sequence "TODO(t)" "WIP(w)" "AWAIT(a)" "|" "DONE(x)")
         ;; '((sequence "TODO(t)" "WAITING(w)" "PROJECT(p)" "SUBPROJECT(s)" "|" "DONE(x)" "CANCEL(c)")
         (sequence "APPT(a)" "|" "DONE(x)" "CANCEL(c)")))
 
@@ -455,7 +475,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(neotree helm-swoop zenburn-theme use-package helm)))
+ '(package-selected-packages
+   '(highlight-indent-guides yasnippet neotree helm-swoop zenburn-theme use-package helm)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -484,6 +505,15 @@
 ;;=============================================
 ;; Manipulating Frame and Window
 ;;=============================================
+;;----------------------------------
+;; tab-bar-mode
+;;----------------------------------
+(define-key global-map (kbd "C-'") 'tab-switcher)
+(define-key global-map (kbd "M-t") 'tab-new)
+(define-key global-map (kbd "<C-tab>") 'tab-next)
+(define-key global-map (kbd "<C-S-tab>")'tab-previous)
+(define-key global-map (kbd "C-M-t") 'tab-close)
+
 ;;----------------------------------
 ;; neotree
 ;; https://github.com/jaypei/emacs-neotree
@@ -568,3 +598,18 @@
 ;;           (setq next-buffer buf)))
 ;;     (switch-to-buffer next-buffer)))
 ;; (global-set-key (kbd "C-x k") 'kill-buffer-for-elscreen)             ; カレントバッファを閉じる
+
+;;=============================================
+;; Misc
+;;=============================================
+;;----------------------------------
+;; insert date
+;; https://crosshope.hatenadiary.org/entry/20110602/1306947203
+;;----------------------------------
+(defun insert-current-time()
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d(%a) %H:%M:%S" (current-time))))
+
+(define-key global-map "\C-cd" `insert-current-time)
+
+

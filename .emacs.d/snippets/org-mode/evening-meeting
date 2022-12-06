@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: evening-meeting
+# key: evening
+# --
+*** $1/$2($3) evening mtg [/]
+
+    # 細谷
+    $0
+
+    # 後藤
+
+
+    # 高橋
+
+
+    # 高宮
+
+
+    # 確認事項・依頼事項
+
